@@ -20,7 +20,7 @@ let addressInputValue = 'test'
 let cityInputValue = 'test'
 let postalInputValue = '100000'
 
-let timeInterval = 500
+let timeInterval = 200
 
 
 async function loadScript(url) {
@@ -145,64 +145,53 @@ function productPage() {
   
 }
 
-function cartCheckoutPage() {
+function cartPage() {
   let emailInput
   let checkboxAgree
   let placeOrderButton
-  let nameInput
-  let addressInput
-  let cityInput
-  let postalInput
-  let placeOrderButton2
   let timerCheckboxAgree
   let timerPlaceOrderButon
-  let timerNameInput
-  let timerAddressInput
-  let timerCityInput
-  let timerPostalInput
-  let timerPlaceOrderButon2
 
-
-
-  function setTimer(func) {
-    let timerName = setInterval(func, timeInterval)
-
-    return timerName
-  }
-
-
+  let timerEmailInput = setInterval(findEmailInput, timeInterval)
 
   function findEmailInput() {
     emailInput = document.querySelector(emailInputSelector)
     if (emailInput) {
       clearInterval(timerEmailInput)
       fillInput(emailInput, emailInputValue)
-
-      function findCheckboxAgree() {
-        checkboxAgree = document.querySelector(checkboxAgreeSelector)
-        if (checkboxAgree) {
-          clearInterval(timerCheckboxAgree)
-          checkboxAgree.click()
-          
-          function findPlaceOrderButton() {
-            placeOrderButton = document.querySelector(placeOrderButtonSelector)
-            if (placeOrderButton) {
-              clearInterval(timerPlaceOrderButon)
-              placeOrderButton.click()
-            }
-          }
-
-          let timerPlaceOrderButon = setInterval(findPlaceOrderButton, timeInterval)
-        }
-      }
-
-      let timerCheckboxAgree = setInterval(findCheckboxAgree, timeInterval)
+      timerCheckboxAgree = setInterval(findCheckboxAgree, timeInterval)
     }
   }
 
-  let timerEmailInput = setInterval(findEmailInput, timeInterval)
+  function findCheckboxAgree() {
+    checkboxAgree = document.querySelector(checkboxAgreeSelector)
+    if (checkboxAgree) {
+      clearInterval(timerCheckboxAgree)
+      checkboxAgree.click()
+      timerPlaceOrderButon = setInterval(findPlaceOrderButton, timeInterval)
+    }
+  }
 
+  function findPlaceOrderButton() {
+    placeOrderButton = document.querySelector(placeOrderButtonSelector)
+    if (placeOrderButton) {
+      clearInterval(timerPlaceOrderButon)
+      placeOrderButton.click()
+    }
+  }
+}
 
+function checkoutPage() {
+  let nameInput
+  let addressInput
+  let cityInput
+  let postalInput
+  let placeOrderButton2
+  let timerNameInput
+  let timerAddressInput
+  let timerCityInput
+  let timerPostalInput
+  let timerPlaceOrderButon2
 
   timerNameInput = setInterval(findNameInput, timeInterval)
 
@@ -299,7 +288,9 @@ async function run() {
 
   await productPage()
 
-  await cartCheckoutPage()
+  await cartPage()
+
+  await checkoutPage()
 
   await assertPage(time)
 }
