@@ -1,20 +1,26 @@
-searchButtonSelector = '#static-html a.footer__link--all-products'
-filtersSelector = '.ec-filters__wrap .ec-filter--offers .form-control__inline-label'
-productPricesSelector = '.grid__products .grid-product .grid-product__price-value'
-cartButtonSelector = '.details-product-purchase__add-buttons .form-control:last-child button.form-control__button'
-cartSpanSelector = '.details-product-purchase__add-buttons .form-control:last-child button.form-control__button span.form-control__button-text'
-cartIconSelector = '.float-icons__icon--cart > .ec-cart-widget > .ec-minicart'
-emailInputSelector = '#ec-cart-email-input'
-checkboxAgreeSelector = '#form-control__checkbox--agree'
-placeOrderButtonSelector = '.form-control__button > .form-control__loader'
-nameInputSelector = '#ec-full-name'
-addressInputSelector = '#ec-address-line1'
-cityInputSelector = '#ec-city-list'
-postalInputSelector = '#ec-postal-code'
-placeOrderButton2Selector = '.form-control__button > .form-control__loader'
-thanksBlockSelector = 'div.ec-store__confirmation-page h1.page-title__name'
+let searchButtonSelector = '#static-html a.footer__link--all-products'
+let filtersSelector = '.ec-filters__wrap .ec-filter--offers .form-control__inline-label'
+let productPricesSelector = '.grid__products .grid-product .grid-product__price-value'
+let cartButtonSelector = '.details-product-purchase__add-buttons .form-control:last-child button.form-control__button'
+let cartSpanSelector = '.details-product-purchase__add-buttons .form-control:last-child button.form-control__button span.form-control__button-text'
+let cartIconSelector = '.float-icons__icon--cart > .ec-cart-widget > .ec-minicart'
+let emailInputSelector = '#ec-cart-email-input'
+let checkboxAgreeSelector = '#form-control__checkbox--agree'
+let placeOrderButtonSelector = '.form-control__button > .form-control__loader'
+let nameInputSelector = '#ec-full-name'
+let addressInputSelector = '#ec-address-line1'
+let cityInputSelector = '#ec-city-list'
+let postalInputSelector = '#ec-postal-code'
+let placeOrderButton2Selector = '.form-control__button > .form-control__loader'
+let thanksBlockSelector = 'div.ec-store__confirmation-page h1.page-title__name'
 
-timeInterval = 200
+let emailInputValue = 'test@mail.ru'
+let nameInputValue = 'test'
+let addressInputValue = 'test'
+let cityInputValue = 'test'
+let postalInputValue = '100000'
+
+let timeInterval = 500
 
 
 async function loadScript(url) {
@@ -32,7 +38,7 @@ async function fillInput(input, value) {
   await input.dispatchEvent(new Event('change', { bubbles: true }));
 }
 
-async function mainPage() {
+function mainPage() {
   let searchButton
   let timeSearchButton
 
@@ -139,68 +145,63 @@ function productPage() {
   
 }
 
-function cartPage() {
+function cartCheckoutPage() {
   let emailInput
   let checkboxAgree
   let placeOrderButton
-  let timerEmailInput
+  let nameInput
+  let addressInput
+  let cityInput
+  let postalInput
+  let placeOrderButton2
   let timerCheckboxAgree
   let timerPlaceOrderButon
+  let timerNameInput
+  let timerAddressInput
+  let timerCityInput
+  let timerPostalInput
+  let timerPlaceOrderButon2
 
 
-  timerEmailInput = setInterval(findEmailInput, timeInterval);
+
+  function setTimer(func) {
+    let timerName = setInterval(func, timeInterval)
+
+    return timerName
+  }
+
+
 
   function findEmailInput() {
     emailInput = document.querySelector(emailInputSelector)
     if (emailInput) {
       clearInterval(timerEmailInput)
-      fillEmailInput()
-      timerCheckboxAgree = setInterval(findCheckboxAgree, timeInterval);
+      fillInput(emailInput, emailInputValue)
+
+      function findCheckboxAgree() {
+        checkboxAgree = document.querySelector(checkboxAgreeSelector)
+        if (checkboxAgree) {
+          clearInterval(timerCheckboxAgree)
+          checkboxAgree.click()
+          
+          function findPlaceOrderButton() {
+            placeOrderButton = document.querySelector(placeOrderButtonSelector)
+            if (placeOrderButton) {
+              clearInterval(timerPlaceOrderButon)
+              placeOrderButton.click()
+            }
+          }
+
+          let timerPlaceOrderButon = setInterval(findPlaceOrderButton, timeInterval)
+        }
+      }
+
+      let timerCheckboxAgree = setInterval(findCheckboxAgree, timeInterval)
     }
   }
 
-  function fillEmailInput() {
-    fillInput(emailInput, 'test@mail.ru')
-  }
+  let timerEmailInput = setInterval(findEmailInput, timeInterval)
 
-  function findCheckboxAgree() {
-    checkboxAgree = document.querySelector(checkboxAgreeSelector)
-    if (checkboxAgree) {
-      clearInterval(timerCheckboxAgree)
-      checkCheckboxAgree()
-      timerPlaceOrderButon = setInterval(findPlaceOrderButton, timeInterval);
-    }
-  }
-
-  function checkCheckboxAgree() {
-    checkboxAgree.click()
-  }
-
-  function findPlaceOrderButton() {
-    placeOrderButton = document.querySelector(placeOrderButtonSelector)
-    if (placeOrderButton) {
-      clearInterval(timerPlaceOrderButon)
-      clickPlaceOrderButton()
-    }
-  }
-
-  function clickPlaceOrderButton() {
-    placeOrderButton.click()
-  }
-
-}
-
-function checkoutPage() {
-  let nameInput
-  let addressInput
-  let cityInput
-  let postalInput
-  let placeOrderButton
-  let timerNameInput
-  let timerAddressInput
-  let timerCityInput
-  let timerPostalInput
-  let timerPlaceOrderButon
 
 
   timerNameInput = setInterval(findNameInput, timeInterval)
@@ -209,66 +210,45 @@ function checkoutPage() {
     nameInput = document.querySelector(nameInputSelector)
     if (nameInput) {
       clearInterval(timerNameInput)
-      fillNameInput()
+      fillInput(nameInput, nameInputValue)
       timerAddressInput = setInterval(findAddressInput, timeInterval)
     }
-  }
-
-  function fillNameInput() {
-    fillInput(nameInput, 'test')
   }
 
   function findAddressInput() {
     addressInput = document.querySelector(addressInputSelector)
     if (addressInput) {
       clearInterval(timerAddressInput)
-      fillAddressInput()
+      fillInput(addressInput, addressInputValue)
       timerCityInput = setInterval(findCityInput, timeInterval)
     }
-  }
-
-  function fillAddressInput() {
-    fillInput(addressInput, 'test')
   }
 
   function findCityInput() {
     cityInput = document.querySelector(cityInputSelector)
     if (cityInput) {
       clearInterval(timerCityInput)
-      fillCityInput()
+      fillInput(cityInput, cityInputValue)
       timerPostalInput = setInterval(findPostalInput, timeInterval)
     }
-  }
-
-  function fillCityInput() {
-    fillInput(cityInput, 'test')
   }
 
   function findPostalInput() {
     postalInput = document.querySelector(postalInputSelector)
     if (postalInput) {
       clearInterval(timerPostalInput)
-      fillPostalInput()
-      timerPlaceOrderButon = setInterval(findPlaceOrderButton, timeInterval)
+      fillInput(postalInput, postalInputValue)
+      timerPlaceOrderButon2 = setInterval(findPlaceOrderButton, timeInterval)
     }
-  }
-
-  function fillPostalInput() {
-    fillInput(postalInput, '100000')
   }
 
   function findPlaceOrderButton() {
-    placeOrderButton = document.querySelector(placeOrderButton2Selector)
-    if (placeOrderButton) {
-      clearInterval(timerPlaceOrderButon)
-      clickPlaceOrderButton()
+    placeOrderButton2 = document.querySelector(placeOrderButton2Selector)
+    if (placeOrderButton2) {
+      clearInterval(timerPlaceOrderButon2)
+      placeOrderButton2.click()
     }
   }
-
-  function clickPlaceOrderButton() {
-    placeOrderButton.click()
-  }
-
 }
 
 function assertPage(time) {
@@ -319,9 +299,7 @@ async function run() {
 
   await productPage()
 
-  await cartPage()
-
-  await checkoutPage()
+  await cartCheckoutPage()
 
   await assertPage(time)
 }
