@@ -9,7 +9,6 @@ filters_count_selector = (By.XPATH, '//*[contains(@class, "ec-filters__applied-c
 products_container_selector = (By.XPATH, '//div[contains(@class, "grid__products")]')
 first_product_selector = (By.XPATH, '//div[contains(@class, "grid__product")]/div[1]')
 products_filtered_selector = (By.XPATH, '//div[contains(@class, "grid__product")]/div')
-products_not_in_stock_selector = (By.XPATH, '//div[contains(@class, "label__text") and contains(text(), "Распродано")]')
+products_names_selelctor = (By.XPATH, '//div[contains(@class, "grid-product__title-inner")]')
 filter_by_in_stock_checkbox_selector = (By.XPATH, '//*[@id="checkbox-in_stock"]')
-products_with_strike_selector = (By.XPATH, '//strike')
 filter_by_discount_checkbox_selector = (By.XPATH, '//*[@id="checkbox-on_sale"]')

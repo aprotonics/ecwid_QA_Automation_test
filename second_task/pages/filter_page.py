@@ -11,34 +11,34 @@ from .locators import *
 class FilterPage(SearchPage):  
     def __init__(self, *args, **kwargs) -> None:
         super(FilterPage, self).__init__(*args, **kwargs)
+        
+        self.low_price_value = 3
+        self.high_price_value = 5
+        self.products_in_price_amount = 0
+        self.products_in_stock_amount = 5
+        self.products_with_strike_amount = 1
 
-        self.products_in_price_number = 0
-        self.products_in_stock_amount = 0
-        self.products_with_strike_amount = 0
-
-    def filter_by_price(self, low_price_value, high_price_value):
+    def filter_by_price(self):
         self.count_products_general_amount()
 
         products_prices = self.driver.find_elements(*products_prices_selector)
         for price_element in products_prices:
             price = int(price_element.text.split(".")[0][1:])
-            if (price >= low_price_value and price <= high_price_value):
-                self.products_in_price_number+=1
-        print("In price:", self.products_in_price_number)
+            if (price >= self.low_price_value and price <= self.high_price_value):
+                self.products_in_price_amount+=1
+        print("In price:", self.products_in_price_amount)
 
         low_price = self.driver.find_element(*low_price_selector)
-        low_price.send_keys(low_price_value)
+        low_price.send_keys(self.low_price_value)
         high_price = self.driver.find_element(*high_price_selector)
-        high_price.send_keys(high_price_value)
+        high_price.send_keys(self.high_price_value)
         high_price.send_keys(Keys.RETURN)
 
         self.wait_for_filters_to_be_applied()
 
     def filter_by_in_stock(self):
         self.count_products_general_amount()
-        products_not_in_stock = self.driver.find_elements(*products_not_in_stock_selector)
-        products_not_in_stock_amount = len(products_not_in_stock)
-        self.products_in_stock_amount = self.products_general_amount - products_not_in_stock_amount
+
         print("In stock:", self.products_in_stock_amount)
 
         filter_by_in_stock_checkbox = self.driver.find_element(*filter_by_in_stock_checkbox_selector)
@@ -48,8 +48,7 @@ class FilterPage(SearchPage):
 
     def filter_by_discount(self):
         self.count_products_general_amount()
-        products_with_strike = self.driver.find_elements(*products_with_strike_selector)
-        self.products_with_strike_amount = len(products_with_strike)
+
         print("Discount:", self.products_with_strike_amount)
 
         filter_by_discount_checkbox = self.driver.find_element(*filter_by_discount_checkbox_selector)
@@ -59,18 +58,22 @@ class FilterPage(SearchPage):
     
     def check_filter_by_price(self):
         products_filtered_amount = self.count_filtered_products_amount()
-        assert products_filtered_amount == self.products_in_price_number
+        unique_products_filtered_amount = self.count_unique_products_amount()
+        assert products_filtered_amount == self.products_in_price_amount
+        assert unique_products_filtered_amount == self.products_in_price_amount
 
     def check_filter_by_in_stock(self):
         products_filtered_amount = self.count_filtered_products_amount()
+        unique_products_filtered_amount = self.count_unique_products_amount()
         assert products_filtered_amount == self.products_in_stock_amount
+        assert unique_products_filtered_amount == self.products_in_stock_amount
         
     def check_filter_by_discount(self):
         products_filtered_amount = self.count_filtered_products_amount()
+        unique_products_filtered_amount = self.count_unique_products_amount()
         assert products_filtered_amount == self.products_with_strike_amount
+        assert unique_products_filtered_amount == self.products_with_strike_amount
 
-    def check_unique_products
-    
     def count_products_general_amount(self):
         products_general = self.driver.find_elements(*products_general_selector)
         self.products_general_amount = len(products_general)
@@ -81,6 +84,15 @@ class FilterPage(SearchPage):
         products_filtered_amount = len(products_filtered)
         print("Filtered products amount:", products_filtered_amount)
         return products_filtered_amount
+
+    def count_unique_products_amount(self):
+        products_names = self.driver.find_elements(*products_names_selelctor)
+        products_names_set = set()
+        for product_name in products_names:
+            products_names_set.add(product_name.text)
+        unique_products_filtered_amount = len(products_names_set)
+        print("Filtered unique products amount:", unique_products_filtered_amount)
+        return unique_products_filtered_amount
 
     def wait_for_filters_to_be_applied(self):
         time.sleep(1)

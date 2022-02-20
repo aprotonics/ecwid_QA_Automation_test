@@ -9,9 +9,7 @@ class TestFilters():
     def test_filter_by_price(self, driver):
         page = FilterPage(driver, URL)
         page.open()
-        low_price_value = 3
-        high_price_value = 5
-        page.filter_by_price(low_price_value, high_price_value)
+        page.filter_by_price()
         page.check_filter_by_price()
 
     def test_filter_by_in_stock(self, driver):
