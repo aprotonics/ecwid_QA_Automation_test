@@ -15,7 +15,7 @@ pip install -r requirements.txt
 ```
 
 ```
-python3 test_filter.py
+pytest
 ```
 
 ##### For Windows
@@ -24,5 +24,5 @@ pip install -r requirements.txt
 ```
 
 ```
-py test_filter.py
+pytest
 ```
