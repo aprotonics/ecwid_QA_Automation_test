@@ -86,7 +86,7 @@ class FilterPage(SearchPage):
         return products_filtered_amount
 
     def count_unique_products_amount(self):
-        products_names = self.driver.find_elements(*products_names_selelctor)
+        products_names = self.driver.find_elements(*products_names_selector)
         products_names_set = set()
         for product_name in products_names:
             products_names_set.add(product_name.text)
